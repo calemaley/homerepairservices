@@ -36,7 +36,9 @@ class ServiceProvider(models.Model):
    #database model for creating a booking  
 class Booking(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    staff = models.ForeignKey(User, models.CASCADE, null=True)
+    ordered_by = models.CharField(max_length=20)
+    address = models.CharField(max_length=50, default="address")
+    email = models.CharField(max_length=50, default = "email")
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 

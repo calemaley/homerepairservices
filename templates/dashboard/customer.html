@@ -4,11 +4,6 @@
     <div class="container">
     <div class="row my-3">
         <div class="col-md-3">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
             <div class="border bg-white p-3">
                 <h4>Book a service</h4>
                 <hr>
@@ -21,6 +16,11 @@
             </div>
         </div>
         <div class="col-md-9">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
             <table class="table bg-white">
                 <thead class="bg-primary">
                     <tr class="text-white">

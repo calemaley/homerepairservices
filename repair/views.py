@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.core.mail import send_mail
 from .models import Service, ServiceProvider, Booking, Review
 from .forms import ServiceForm,ProviderForm, BookingForm, ReviewForm
 from django.contrib.auth import logout
@@ -19,6 +20,8 @@ def index(request):
         form=BookingForm(request.POST)
         if form.is_valid():
             form.save()
+            service_name = form.cleaned_data.get('service')#gets the name from the form so and stores in variable category_name
+            messages.success(request, f'Request for {service_name} has been sent')
             return redirect('dashboard-index')
     else:
         form=BookingForm()
@@ -39,7 +42,7 @@ def servicemanage(request):
         form= ServiceForm(request.POST)
         if form.is_valid():
             form.save()
-            category_name = form.cleaned_data.get('category')#gets the name from the form so and stores in variable duty_name
+            category_name = form.cleaned_data.get('category')#gets the name from the form so and stores in variable category_name
             messages.success(request, f'Duty for {category_name} has been added')
             return redirect('dashboard-servicemanage')
      else:
@@ -98,6 +101,41 @@ def booking(request):
         'bookings':bookings
     }
     return render(request, 'dashboard/bookinglist.html',context)
+#function for scheduling a booking
+def booking_schedule(request,pk):    
+      booking = Booking.objects.get(id=pk)
+      if request.method=="POST":
+         form = BookingForm(request.POST, instance=booking)
+         if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get('email')
+            email_content =f'a technician will be coming for a repair at {request.POST['schedule-time']} approximately.Give or take a few minutes'
+            send_mail(
+                'Your request for a home repair service',
+                email_content,
+                'greatwhitey64@gmail.com',  # Replace with your email
+                [email],
+            )
+            return redirect('dashboard-booking')
+      else:
+        form = BookingForm(instance=booking)
+      context = {
+        'form':form,
+        # 'email':email,
+        # 'email_content':email_content,
+       }
+      return render(request, 'dashboard/booking_schedule.html',context)
+
+def booking_delete(request, pk):
+    #room= Ward.objects.get(id=pk)
+    booking = Booking.objects.get(id=pk)
+    if request.method=='POST':
+        booking.delete()
+        return redirect('dashboard-booking')
+    context = {
+        ' booking': booking,
+    }
+    return render(request, 'dashboard/booking_delete.html',context) 
 #function for viewing the customer page 
 def customerpage(request):
     bookings = Booking.objects.all()

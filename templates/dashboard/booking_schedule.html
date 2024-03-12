@@ -1,0 +1,25 @@
+{% extends "partials/base.html" %}
+{% block title %}Edit page{% endblock %}
+{% load crispy_forms_tags %}
+{% block content%}
+<div class="container">
+    <div class="row mt-5 offset-md-3">
+        <div class="col-md-6">
+            <div class="border bg-white p-3">
+                <h3>Schedule</h3>
+                <form action="" method="POST">
+                   {% csrf_token %} 
+                   {{ form|crispy }}
+                   <div class="col-md-12 form-control mb-30">
+                    <label>Schedule time</label>
+                    <input type="datetime-local" name="schedule-time">
+                   </div>
+                  
+                   <a class="btn btn-secondary" href="{% url 'dashboard-booking' %}">Cancel</a>
+                    <input class="btn btn-info" type="submit" value="Schedule">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

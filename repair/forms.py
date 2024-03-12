@@ -18,7 +18,7 @@ class ProviderForm(forms.ModelForm):
 class BookingForm(forms.ModelForm):
     class Meta:
         model=Booking
-        fields=['service']
+        fields=['service','ordered_by','address','email']
 
 #form for review
 class ReviewForm(forms.ModelForm):
